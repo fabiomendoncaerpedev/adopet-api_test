@@ -30,7 +30,7 @@ public class AbrigoService {
                 .toList();
     }
 
-    public void cadatrar(CadastroAbrigoDto dto) {
+    public void cadastrar(CadastroAbrigoDto dto) {
         boolean jaCadastrado = abrigoRepository.existsByNomeOrTelefoneOrEmail(dto.nome(), dto.telefone(), dto.email());
 
         if (jaCadastrado) {
@@ -61,5 +61,4 @@ public class AbrigoService {
 
         return optional.orElseThrow(() -> new ValidacaoException("Abrigo não encontrado"));
     }
-
 }

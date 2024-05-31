@@ -1,5 +1,6 @@
 package br.com.alura.adopet.api.service;
 
+import br.com.alura.adopet.api.dto.AprovacaoAdocaoDto;
 import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDto;
 import br.com.alura.adopet.api.model.Abrigo;
 import br.com.alura.adopet.api.model.Adocao;
@@ -9,8 +10,8 @@ import br.com.alura.adopet.api.repository.AdocaoRepository;
 import br.com.alura.adopet.api.repository.PetRepository;
 import br.com.alura.adopet.api.repository.TutorRepository;
 import br.com.alura.adopet.api.validacoes.ValidacaoSolicitacaoAdocao;
-import jakarta.inject.Inject;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -43,10 +44,14 @@ class AdocaoServiceTest {
     @Mock
     private Pet pet;
     @Mock
+    private Adocao adocaoMockado;
+    @Mock
     private Tutor tutor;
     @Mock
     private Abrigo abrigo;
     private SolicitacaoAdocaoDto dto;
+    @Mock
+    private AprovacaoAdocaoDto aprovacaoAdocaoDto;
     @Captor
     private ArgumentCaptor<Adocao> adocaoCaptor;
 
@@ -68,7 +73,7 @@ class AdocaoServiceTest {
     }
 
     @Test
-    void deveriaChamarvalidadosDeAdocaoAoSolicitar() {
+    void deveriaChamarValidadoresDeAdocaoAoSolicitar() {
         this.dto = new SolicitacaoAdocaoDto(10l, 20l, "motivo qualquer");
         given(petRepository.getReferenceById(dto.idPet())).willReturn(pet);
         given(tutorRepository.getReferenceById(dto.idTutor())).willReturn(tutor);
@@ -80,5 +85,16 @@ class AdocaoServiceTest {
 
         BDDMockito.then(validador1).should().validar(dto);
         BDDMockito.then(validador2).should().validar(dto);
+    }
+
+    @Test
+    @DisplayName("deveria marcar adoção como aprovada")
+    void cenarioAprovacao() {
+        given(repository.getReferenceById(aprovacaoAdocaoDto.idAdocao())).willReturn(adocaoMockado);
+
+        service.aprovar(aprovacaoAdocaoDto);
+
+        
+
     }
 }
