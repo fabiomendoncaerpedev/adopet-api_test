@@ -35,12 +35,13 @@ class ValidacaoPetComAdocaoEmAndamentoTest {
     @Test
     @DisplayName("Deverá levantar exceção avisando que Pet já está em processo de adoção")
     void cenarioNegativo() {
+        String expectedMessage = "Pet já está aguardando avaliação para ser adotado!";
         BDDMockito.given(
                 adocaoRepository.existsByPetIdAndStatus(dto.idPet(), StatusAdocao.AGUARDANDO_AVALIACAO)
         ).willReturn(true);
 
         ValidacaoException ex = Assertions.assertThrows(ValidacaoException.class, () -> validacao.validar(dto));
 
-        Assertions.assertEquals(ex.getMessage(), "Pet já está aguardando avaliação para ser adotado!");
+        Assertions.assertEquals(ex.getMessage(), expectedMessage);
     }
 }
