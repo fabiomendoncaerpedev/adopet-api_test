@@ -21,5 +21,4 @@ public class ValidacaoPetComAdocaoEmAndamento implements ValidacaoSolicitacaoAdo
             throw new ValidacaoException("Pet já está aguardando avaliação para ser adotado!");
         }
     }
-
 }
