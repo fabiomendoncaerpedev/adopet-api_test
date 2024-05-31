@@ -38,6 +38,10 @@ public class Adocao {
 
     public Adocao(){}
 
+    public void setTutor(Tutor tutor) {
+        this.tutor = tutor;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
