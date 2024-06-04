@@ -1,7 +1,10 @@
 package br.com.alura.adopet.api.controller;
 
 import br.com.alura.adopet.api.dto.AbrigoDto;
+import br.com.alura.adopet.api.exception.ValidacaoException;
+import br.com.alura.adopet.api.model.Abrigo;
 import br.com.alura.adopet.api.service.AbrigoService;
+import br.com.alura.adopet.api.service.PetService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +13,7 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,8 +30,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 class AbrigoControllerTest {
     @Autowired
     private MockMvc mvc;
-    @Mock
+    @MockBean
     private AbrigoService abrigoService;
+    @MockBean
+    private PetService petService;
+    @Mock
+    private Abrigo abrigo;
 
     @Test
     @DisplayName("should list all shelters")
@@ -93,6 +101,7 @@ class AbrigoControllerTest {
     @DisplayName("should return code 404 warning that no shelter was found")
     void negativeScenarioGetListarPets() throws Exception {
         String idOrName = "miauzin";
+        BDDMockito.given(abrigoService.listarPetsDoAbrigo(idOrName)).willThrow(ValidacaoException.class);
 
         MockHttpServletResponse response = mvc.perform(
                 get("/abrigos/{idOuNome}/pets", idOrName)
@@ -126,9 +135,9 @@ class AbrigoControllerTest {
     }
 
     @Test
-    @DisplayName("should return code 400 warning that no shelter was found")
+    @DisplayName("should return code 404 warning that no shelter was found")
     void negativeScenarioGetCadastrarPet() throws Exception {
-        String idOrName = "miauzin casa de adocao";
+        String idOrName = "miauzinho adocoes";
         String json = """
                 {
                     "tipo": "GATO",
@@ -139,6 +148,7 @@ class AbrigoControllerTest {
                     "peso": 2.5
                 }
                 """;
+        BDDMockito.given(abrigoService.carregarAbrigo(idOrName)).willThrow(ValidacaoException.class);
 
         MockHttpServletResponse response = mvc.perform(
                 post("/abrigos/{idOuNome}/pets", idOrName)

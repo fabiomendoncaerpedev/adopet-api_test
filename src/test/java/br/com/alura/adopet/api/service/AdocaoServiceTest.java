@@ -86,15 +86,4 @@ class AdocaoServiceTest {
         BDDMockito.then(validador1).should().validar(dto);
         BDDMockito.then(validador2).should().validar(dto);
     }
-
-    @Test
-    @DisplayName("deveria marcar adoção como aprovada")
-    void cenarioAprovacao() {
-        given(repository.getReferenceById(aprovacaoAdocaoDto.idAdocao())).willReturn(adocaoMockado);
-
-        service.aprovar(aprovacaoAdocaoDto);
-
-        
-
-    }
 }
